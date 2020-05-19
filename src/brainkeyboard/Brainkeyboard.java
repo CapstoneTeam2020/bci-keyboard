@@ -31,6 +31,8 @@ public class Brainkeyboard extends PApplet{
     }
     public void setup() {
         // size(500, 300);
+        //frameRate(30); // number of times frame refreshed within second
+        // by default frameRate is 60
         neuroSocket = new ThinkGearSocket(this);
         
         try{
@@ -91,7 +93,7 @@ public class Brainkeyboard extends PApplet{
         noFill();
         stroke(255);
         rect(x_value, y_value, 50, 50); //moving box dimensions
-        print("x:"+x_value +" " + "y:"+ y_value + " " + "k:"+ curr_index + "  " +"Blinkstrength:" + blink_strength);
+        //print("x:"+x_value +" " + "y:"+ y_value + " " + "k:"+ curr_index + "  " +"Blinkstrength:" + blink_strength);
         
         /*----*/
         if(attention > 80){
@@ -136,13 +138,17 @@ public class Brainkeyboard extends PApplet{
         meditation = meditationLevel;
     }
     
+    public void rawEvent(int[] values){
+        // to get raw values;
+    }
+    
     public void stop(){
         neuroSocket.stop();
         super.stop();
     }
     
     public static void main(String[] args) {
-        // if file is package then use packagename.Classname
+        // if file is within package then use packagename.Classname
         PApplet.main(new String[] { "--bgcolor=#ECE9D8", "brainkeyboard.Brainkeyboard" });
     }
 }
