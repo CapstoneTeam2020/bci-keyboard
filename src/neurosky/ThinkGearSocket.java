@@ -26,18 +26,14 @@ public class ThinkGearSocket  implements Runnable{
 	public BufferedReader stdIn;
   private Method attentionEventMethod = null;
   private Method meditationEventMethod = null;
-  private Method poorSignalEventMethod = null;
+  //private Method poorSignalEventMethod = null;
   private Method blinkEventMethod = null;
-  private Method eegEventMethod = null;
-  private Method rawEventMethod = null;
+  //private Method eegEventMethod = null;
+
   public String appName="";
   public String appKey="";
   private Thread t;
-  
-  private int raw[] = new int[512];
-  private int index = 0;
-  
-	public final static String VERSION = "1.0";
+  public final static String VERSION = "1.0";
   
   
   
@@ -73,6 +69,7 @@ public class ThinkGearSocket  implements Runnable{
 	      catch (Exception e) {
 	      	System.err.println("meditationEvent() method not defined. ");
 	      }
+              /*
 	      try {
 	        poorSignalEventMethod =
 	          parent.getClass().getMethod("poorSignalEvent",  new Class[] { 
@@ -83,7 +80,7 @@ public class ThinkGearSocket  implements Runnable{
 	      catch (Exception e) {
 	      	System.err.println("poorSignalEvent() method not defined. ");
 	      }
-
+              */
 	      try {
 	        blinkEventMethod =
 	          parent.getClass().getMethod("blinkEvent",  new Class[] { 
@@ -94,6 +91,7 @@ public class ThinkGearSocket  implements Runnable{
 	      catch (Exception e) {
 	      	System.err.println("blinkEvent() method not defined. ");
 	      }
+              /*
 	      try {
 	        eegEventMethod =
 	          parent.getClass().getMethod("eegEvent",  new Class[] { 
@@ -104,30 +102,15 @@ public class ThinkGearSocket  implements Runnable{
 	      catch (Exception e) {
 	      	System.err.println("eegEvent() method not defined. ");
 	      }
-
-	     try {
-	        rawEventMethod =
-	          parent.getClass().getMethod("rawEvent",  new Class[] { 
-	          int[].class
-	        }   
-	        );
-	      } 
-	      catch (Exception e) {
-	      	System.err.println("rawEvent() method not defined. ");
-	      }
-
-	}
+              */
+        }
 	
 	
 	  public boolean isRunning(){
 		  return running;
 	  }
 	
-	/**
-	 * return the version of the library.
-	 * 
-	 * @return String
-	 */
+	/* returns version of library */
 	public static String version() {
 		return VERSION;
 	}
@@ -139,7 +122,7 @@ public class ThinkGearSocket  implements Runnable{
 			neuroSocket = new Socket("127.0.0.1",13854);	
 		} catch (ConnectException e) {
 			//e.printStackTrace();
-			System.out.println("Oi plonker! Is ThinkkGear running?");
+			System.out.println("Is ThinkkGear running?");
 			running = false;
 			throw e;
 		} catch (UnknownHostException e) {
@@ -147,7 +130,7 @@ public class ThinkGearSocket  implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			inStream  = neuroSocket.getInputStream();
 			outStream = neuroSocket.getOutputStream();
@@ -176,7 +159,6 @@ public class ThinkGearSocket  implements Runnable{
 			System.out.println("appAuth"+appAuth);
 		}
 		
-		
 		JSONObject format = new JSONObject();
 		try {
 			format.put("enableRawOutput", true);
@@ -199,10 +181,9 @@ public class ThinkGearSocket  implements Runnable{
 	    
 	}
 	
-	
 	@SuppressWarnings("deprecation")
 	public void stop(){
-		
+            
 		if(running){
 			t.interrupt();
 			try {
@@ -218,16 +199,15 @@ public class ThinkGearSocket  implements Runnable{
 				e.printStackTrace();
 				//System.out.println("Socket close issue");
 			}
-			
-			
 		}
 		running = false;
 	}
+        
 	public void sendMessage(String msg){
 		PrintWriter out = new PrintWriter(outStream, true);
-		//System.out.println("sendmsg");
 		out.println(msg);
 	}
+        
 	@Override
 	public void run() {
 		if(running && neuroSocket.isConnected()){
@@ -243,10 +223,7 @@ public class ThinkGearSocket  implements Runnable{
 							parsePacket(obj);
 						}
 						
-						//String name = obj.get("name").toString();
 					}
-					
-		
 				}
 			} 
 			catch(SocketException e){
@@ -292,7 +269,7 @@ public class ThinkGearSocket  implements Runnable{
 	          meditationLevel
 	        }   
 	        );
-	        //println("Attention: " + attention);
+                
 	      } 
 	      catch (Exception e) {
 	        System.err.println("Disabling meditationEvent()  because of an error.");
@@ -301,7 +278,7 @@ public class ThinkGearSocket  implements Runnable{
 	      }
 	    }
 	  }
-
+          /*
 	  private void triggerPoorSignalEvent(int poorSignalLevel) {
 	    if (poorSignalEventMethod != null) {
 	      try {
@@ -318,6 +295,7 @@ public class ThinkGearSocket  implements Runnable{
 	      }
 	    }
 	  }  
+          */
 
 	  private void triggerBlinkEvent(int blinkStrength) {
 	    if (blinkEventMethod != null) {
@@ -334,7 +312,8 @@ public class ThinkGearSocket  implements Runnable{
 	      }
 	    }
 	  }
-
+          
+          /*
 	  private void triggerEEGEvent(int delta, int theta, int low_alpha, int high_alpha, int low_beta, int high_beta, int low_gamma, int mid_gamma) {
 	    if (eegEventMethod != null) {
 	      try {
@@ -350,24 +329,8 @@ public class ThinkGearSocket  implements Runnable{
 	      }
 	    }
 	  }
+          */
 
-
-	  private void triggerRawEvent(int []values) {
-	    if (rawEventMethod != null) {
-	      try {
-	        rawEventMethod.invoke(parent, new Object[] {
-	          values
-	        }   
-	        );
-	      } 
-	      catch (Exception e) {
-	        System.err.println("Disabling rawEvent()  because of an error.");
-	        e.printStackTrace();
-	        rawEventMethod = null;
-	      }
-	    }
-	  }	
-	  
 	  
 	  private void parsePacket(JSONObject data){
 			Iterator itr = data.keys(); 
@@ -377,22 +340,12 @@ public class ThinkGearSocket  implements Runnable{
 			    String key = e.toString();
 			    
 			    try{
-			    	
+                                    /*
 				    if(key.matches("poorSignalLevel")){
 				    	triggerPoorSignalEvent(data.getInt(e.toString()));
 				    	
 				    }
-				  if(key.matches("rawEeg")){
-				    	 int rawValue =  (Integer) data.get("rawEeg");
-				          raw[index] = rawValue;
-				          index++;
-				          if (index == 512) {
-				            index = 0;
-				            int rawCopy[] = new int[512];
-				            parent.arrayCopy(raw, rawCopy);
-				            triggerRawEvent(rawCopy);
-				          }
-				    }
+                                    */
 				    if(key.matches("blinkStrength")){
 				    	triggerBlinkEvent(data.getInt(e.toString()));
 				    	
@@ -404,15 +357,16 @@ public class ThinkGearSocket  implements Runnable{
 				    	triggerMeditationEvent(esense.getInt("meditation"));
 				    	
 				    }
+                                    /*
 				    if(key.matches("eegPower")){
 				    	JSONObject eegPower = data.getJSONObject("eegPower");
 				    	triggerEEGEvent(eegPower.getInt("delta"), eegPower.getInt("theta"), eegPower.getInt("lowAlpha"), eegPower.getInt("highAlpha"),eegPower.getInt("lowBeta"), eegPower.getInt("highBeta"),eegPower.getInt("lowGamma"), eegPower.getInt("highGamma"));
 						
 				    	//System.out.println(key);
-				    }			    			    
+				    }
+                                    */
 			    }
 			    catch(Exception ex){
-			    	
 			    	ex.printStackTrace();
 			    }
 			} 
