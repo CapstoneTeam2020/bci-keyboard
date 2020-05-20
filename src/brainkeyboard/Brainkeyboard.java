@@ -132,6 +132,7 @@ public class Brainkeyboard extends PApplet{
     
     public void attentionEvent(int attentionLevel){
         attention = attentionLevel;
+        //attention = 90;
     }
     
     public void meditationEvent(int meditationLevel){

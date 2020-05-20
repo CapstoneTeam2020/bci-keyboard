@@ -29,6 +29,7 @@ public class ThinkGearSocket  implements Runnable{
   private Method meditationEventMethod = null;
   private Method blinkEventMethod = null;
   private Method rawEventMethod = null;
+  //private Method eegEventMethod = null;
   public String appName="";
   public String appKey="";
   private Thread t;
@@ -83,6 +84,18 @@ public class ThinkGearSocket  implements Runnable{
 	      catch (Exception e) {
 	      	System.err.println("blinkEvent() method not defined. ");
 	      }
+              /*
+              try {
+	        eegEventMethod =
+	          parent.getClass().getMethod("eegEvent",  new Class[] { 
+	          int.class, int.class, int.class, int.class, int.class, int.class, int.class, int.class
+	        }   
+	        );
+	      } 
+	      catch (Exception e) {
+	      	System.err.println("eegEvent() method not defined. ");
+	      }
+              */
 
 	     try {
 	        rawEventMethod =
@@ -284,6 +297,23 @@ public class ThinkGearSocket  implements Runnable{
 	      }
 	    }
 	  }
+          /*
+          private void triggerEEGEvent(int delta, int theta, int low_alpha, int high_alpha, int low_beta, int high_beta, int low_gamma, int mid_gamma) {
+	    if (eegEventMethod != null) {
+	      try {
+	        eegEventMethod.invoke(parent, new Object[] {
+	          delta, theta, low_alpha, high_alpha, low_beta, high_beta, low_gamma, mid_gamma
+	        }   
+	        );
+	      } 
+	      catch (Exception e) {
+	        System.err.println("Disabling eegEvent()  because of an error.");
+	        e.printStackTrace();
+	        eegEventMethod = null;
+	      }
+	    }
+	  }
+          */
 
 	  private void triggerRawEvent(int []values) {
 	    if (rawEventMethod != null) {
@@ -330,7 +360,12 @@ public class ThinkGearSocket  implements Runnable{
 				    	triggerAttentionEvent(esense.getInt("attention"));
 				    	triggerMeditationEvent(esense.getInt("meditation"));
 				    	
-				    }  
+				    }
+                                    /*
+                                    if(key.matches("eegPower")){
+				    	JSONObject eegPower = data.getJSONObject("eegPower");
+				    	triggerEEGEvent(eegPower.getInt("delta"), eegPower.getInt("theta"), eegPower.getInt("lowAlpha"), eegPower.getInt("highAlpha"),eegPower.getInt("lowBeta"), eegPower.getInt("highBeta"),eegPower.getInt("lowGamma"), eegPower.getInt("highGamma"));
+				    }*/
 			    }
 			    catch(Exception ex){
 			    	
