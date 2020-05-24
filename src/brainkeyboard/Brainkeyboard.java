@@ -31,7 +31,7 @@ public class Brainkeyboard extends PApplet{
     }
     public void setup() {
         // size(500, 300);
-        //frameRate(30); // number of times frame refreshed within second
+        frameRate(1); // number of times frame refreshed within second
         // by default frameRate is 60
         neuroSocket = new ThinkGearSocket(this);
         
@@ -83,6 +83,7 @@ public class Brainkeyboard extends PApplet{
         text("Blink: " + blink_strength, 10, 10);
         
         blink_strength = 0;
+        attention = 0;
         fill(0);
         textSize(18);
         text(lockinput, 40, 48, 500, 300);
@@ -96,43 +97,34 @@ public class Brainkeyboard extends PApplet{
         //print("x:"+x_value +" " + "y:"+ y_value + " " + "k:"+ curr_index + "  " +"Blinkstrength:" + blink_strength);
         
         /*----*/
-        if(attention > 80){
-            t = 50;
-            println("Attention: " + attention);
-            attention = 0;
-        }
-        if(t == 50){
-            if(x_value < 450){
-                x_value += 50;
+        if(x_value < 450){
+            x_value += 50;
+        }else{
+            x_value = 30;
+            if(y_value<200){
+                y_value+=50;
             }else{
-                x_value = 30;
-                if(y_value<200){
-                    y_value+=50;
-                }else{
-                    y_value = 110;
-                }
+                y_value = 110;
             }
+        }
             
-            // letters have 30 elements
-            // curr_index < 29
-            if(curr_index < letters.length - 1){
-                curr_index+=1;
-            }else{
-                // start from first character again;
-                curr_index = 0;
-            }
-            t = 0;
+        // letters have 30 elements
+        // curr_index < 29
+        if(curr_index < letters.length - 1){
+            curr_index+=1;
+        }else{
+            // start from first character again;
+            curr_index = 0;
         }
-        t++;
     }
     
     public void blinkEvent(int blinkStrength){
         blink_strength = blinkStrength;
+        
     }
     
     public void attentionEvent(int attentionLevel){
         attention = attentionLevel;
-        //attention = 90;
     }
     
     public void meditationEvent(int meditationLevel){
