@@ -30,7 +30,7 @@ public class Brainkeyboard extends PApplet{
         size(550,300);
     }
     public void setup() {
-        // size(500, 300);
+
         frameRate(1); // number of times frame refreshed within second
         // by default frameRate is 60
         neuroSocket = new ThinkGearSocket(this);
@@ -63,7 +63,7 @@ public class Brainkeyboard extends PApplet{
         rect(30,30,500,50);
         
         /*logic to select characters on eye blink*/
-        if(blink_strength > 0){
+        if(blink_strength > 50 && attention > 30){
             if(letters[curr_index] == "-"){
                 //the last character entered should be deleted.
                 input = input.substring(0,input.length()- 1);

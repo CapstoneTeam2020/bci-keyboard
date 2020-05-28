@@ -128,7 +128,7 @@ public class ThinkGearSocket  implements Runnable{
 			neuroSocket = new Socket("127.0.0.1",13854);	
 		} catch (ConnectException e) {
 			//e.printStackTrace();
-			System.out.println("Oi plonker! Is ThinkkGear running?");
+			System.out.println("Is ThinkkGear running?");
 			running = false;
 			throw e;
 		} catch (UnknownHostException e) {
@@ -228,11 +228,7 @@ public class ThinkGearSocket  implements Runnable{
 							JSONObject obj = new JSONObject((String) packets[s]);
 							parsePacket(obj);
 						}
-						
-						//String name = obj.get("name").toString();
 					}
-					
-		
 				}
 			} 
 			catch(SocketException e){
@@ -334,10 +330,8 @@ public class ThinkGearSocket  implements Runnable{
 	  private void parsePacket(JSONObject data){
 			Iterator itr = data.keys(); 
 			while(itr.hasNext()) {
-
 			    Object e = itr.next(); 
 			    String key = e.toString();
-			    
 			    try{
 				  if(key.matches("rawEeg")){
 				    	 int rawValue =  (Integer) data.get("rawEeg");
@@ -353,8 +347,7 @@ public class ThinkGearSocket  implements Runnable{
 				    if(key.matches("blinkStrength")){
 				    	triggerBlinkEvent(data.getInt(e.toString()));
 				    	
-				    }  
-				    	
+				    }  	
 				    if(key.matches("eSense")){
 				    	JSONObject esense = data.getJSONObject("eSense");
 				    	triggerAttentionEvent(esense.getInt("attention"));
@@ -365,7 +358,8 @@ public class ThinkGearSocket  implements Runnable{
                                     if(key.matches("eegPower")){
 				    	JSONObject eegPower = data.getJSONObject("eegPower");
 				    	triggerEEGEvent(eegPower.getInt("delta"), eegPower.getInt("theta"), eegPower.getInt("lowAlpha"), eegPower.getInt("highAlpha"),eegPower.getInt("lowBeta"), eegPower.getInt("highBeta"),eegPower.getInt("lowGamma"), eegPower.getInt("highGamma"));
-				    }*/
+				    }
+                                    */
 			    }
 			    catch(Exception ex){
 			    	
